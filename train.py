@@ -13,29 +13,20 @@ import os
 import sys
 import uuid
 from tqdm import tqdm
-from random import randint
 import cv2
 import numpy as np
 import torch
 import torchvision
-import torch.nn as nn
-import sklearn
-import sklearn.decomposition
 from argparse import ArgumentParser, Namespace
 from arguments import ModelParams, PipelineParams, OptimizationParams
 from scene import Scene, GaussianModel
 from gaussian_renderer import render, network_gui
-from render import depth_colorize_with_mask
 
 from utils.loss_utils import l1_loss, l2_loss, nearMean_map, ssim
-from utils.image_utils import psnr, normalize_depth, render_net_image
+from utils.image_utils import psnr, normalize_depth, depth_colorize_with_mask
 from utils.general_utils import safe_state
 from lpipsPyTorch import lpips
 
-import torch.nn.functional as F
-
-from models.networks import CNN_decoder
-from PIL import Image
 try:
     from torch.utils.tensorboard import SummaryWriter
     TENSORBOARD_FOUND = True

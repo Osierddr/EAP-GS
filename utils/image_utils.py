@@ -134,3 +134,20 @@ def render_net_image(render_pkg, render_items, render_mode, camera):
     if net_image.shape[0]==1:
         net_image = colormap(net_image)
     return net_image
+
+def depth_colorize_with_mask(depthlist, background=(0,0,0), dmindmax=None):
+    """ depth: (H,W) - [0 ~ 1] / mask: (H,W) - [0 or 1]  -> colorized depth (H,W,3) [0 ~ 1] """
+    batch, vx, vy = np.where(depthlist!=0)
+    if dmindmax is None:
+        valid_depth = depthlist[batch, vx, vy]
+        dmin, dmax = valid_depth.min(), valid_depth.max()
+    else:
+        dmin, dmax = dmindmax
+    
+    norm_dth = np.ones_like(depthlist)*dmax # [B, H, W]
+    norm_dth[batch, vx, vy] = (depthlist[batch, vx, vy]-dmin)/(dmax-dmin)
+    
+    final_depth = np.ones(depthlist.shape + (3,)) * np.array(background).reshape(1,1,1,3) # [B, H, W, 3]
+    final_depth[batch, vx, vy] = cmapper(norm_dth)[batch,vx,vy,:3]
+
+    return final_depth

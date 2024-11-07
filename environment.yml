@@ -1,0 +1,21 @@
+name: EAP-GS
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - cudatoolkit=11.6
+  - plyfile
+  - python=3.8.12
+  - pip=23.3.1
+  - pytorch=1.13.1
+  - torchaudio=0.13.1
+  - torchvision=0.14.1
+  - tqdm
+  - pip:
+    - submodules/diff-gaussian-rasterization-depth
+    - submodules/simple-knn
+    - opencv-python
+    - scikit-learn
+    - scikit-image
+    - matplotlib
