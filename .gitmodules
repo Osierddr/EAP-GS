@@ -1,3 +1,9 @@
 [submodule "ZoeDepth"]
 	path = ZoeDepth
 	url = https://github.com/isl-org/ZoeDepth.git
+[submodule "submodules/simple-knn"]
+	path = submodules/simple-knn
+	url = https://github.com/Osierddr/simple-knn
+[submodule "submodules/diff-gaussian-rasterization-depth"]
+	path = submodules/diff-gaussian-rasterization-depth
+	url = https://github.com/Osierddr/diff-gaussian-rasterization-depth
