@@ -9,8 +9,20 @@ from scene.colmap_loader import qvec2rotmat, read_extrinsics_binary, read_intrin
 from utils.graphics_utils import focal2fov
 from plyfile import PlyData, PlyElement
 from scene.gaussian_model import BasicPointCloud
+import argparse
 
-path = 'data'
+parser = argparse.ArgumentParser(description="Augmentation parameters")
+parser.add_argument('--source_path', type=str, required=True, help="Path to the images directory.")
+parser.add_argument('--eps', type=int, default=15, help="The maximum distance between two samples for one to be considered as in the neighborhood of the other.")
+parser.add_argument('--min_samples', type=int, default=10, help="The number of samples in a neighborhood for a point to be considered as a core point.")
+parser.add_argument('--radius', type=int, default=10, help="The radius of region around attention point.")
+args = parser.parse_args()
+
+path = args.source_path
+eps = args.eps
+min_samples = args.min_samples
+radius = args.radius
+
 
 with open(os.path.join(path, "split_index.json"), "r") as jf:
     jsonf = json.load(jf)
@@ -81,7 +93,7 @@ for idx, key in enumerate(sorted(cam_extrinsics, key=lambda x: cam_extrinsics[x]
                  np.round(cam_coord[0]).astype(np.int32).clip(0, width - 1)] = pts_depths
 
         indices = np.array(np.nonzero(depthmap)).transpose()
-        labels = DBSCAN(eps=15, min_samples=10).fit(indices).labels_
+        labels = DBSCAN(eps=eps, min_samples=min_samples).fit(indices).labels_
         num_clusters = len(set(labels)) - (1 if -1 in labels else 0)
 
         mask = np.ones((height, width), dtype=np.uint8)
@@ -90,8 +102,8 @@ for idx, key in enumerate(sorted(cam_extrinsics, key=lambda x: cam_extrinsics[x]
             if cluster_points.size > 0:
                 for point in cluster_points:
                     x, y = int(point[1]), int(point[0])
-                    rr, cc = disk((y, x), 10, shape=mask.shape)
+                    rr, cc = disk((y, x), radius, shape=mask.shape)
                     mask[rr, cc] = 0
 
         img = np.array(image) * mask[:, :, np.newaxis]
-        Image.fromarray(img.astype(np.uint8)).save(os.path.join(image_path, f"{(idx+len(train_idx)):05d}.jpg"))
+        Image.fromarray(img.astype(np.uint8)).save(os.path.join(image_path, f"{(idx+len(train_idx)):05d}.JPG"))
