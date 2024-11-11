@@ -228,9 +228,9 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
                         torchvision.utils.save_image(gt_image, gt_image_path)
 
                         # depth.
-                        depth_path = os.path.join(render_path, f"{config['name']}_{idx:03d}_depth.png")
-                        depth = ((depth_colorize_with_mask(depth.cpu().numpy()[None])).squeeze() * 255.0).astype(np.uint8)
-                        cv2.imwrite(depth_path, depth[:,:,::-1])
+                        # depth_path = os.path.join(render_path, f"{config['name']}_{idx:03d}_depth.png")
+                        # depth = ((depth_colorize_with_mask(depth.cpu().numpy()[None])).squeeze() * 255.0).astype(np.uint8)
+                        # cv2.imwrite(depth_path, depth[:,:,::-1])
                     l1_test += l1_loss(image, gt_image).mean().double()
                     psnr_test += psnr(image, gt_image).mean().double()
                     ssim_test += ssim(image, gt_image).mean().double()
