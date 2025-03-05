@@ -85,8 +85,6 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder, mask_folder
     model_zoe = None
 
     for idx, key in enumerate(sorted(cam_extrinsics,key=lambda x:cam_extrinsics[x].name)):
-        if idx not in train_idx and idx not in test_idx:
-            continue
 
         sys.stdout.write('\r')
         # the exact output you're looking for:
@@ -102,7 +100,7 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder, mask_folder
         R = np.transpose(qvec2rotmat(extr.qvec))
         T = np.array(extr.tvec)
 
-        if intr.model=="SIMPLE_PINHOLE":
+        if intr.model=="SIMPLE_PINHOLE" or intr.model=="SIMPLE_RADIAL":
             focal_length_x = intr.params[0]
             focal_length_y = intr.params[0]
             FovY = focal2fov(focal_length_y, height)
@@ -274,11 +272,12 @@ def storePly(path, xyz, rgb, xyzerr=None):
     ply_data.write(path)
 
 
-def refineColmapWithIndex(path, train_index):
+def refineColmapWithIndex(path, train_index, pc_name):
     """ result
     'cam_extrinsics' and 'point3D.ply' contains the points observed in (at least 2) train-views 
     """
-    bin_path = os.path.join(path, "sparse/0/points3D.bin")
+
+    bin_path = os.path.join(path, f"sparse/0/{pc_name}.bin")
 
     cameras_extrinsic_file = os.path.join(path, "sparse/0", "images.bin")
     cameras_intrinsic_file = os.path.join(path, "sparse/0", "cameras.bin")
@@ -369,7 +368,7 @@ def pick_idx_from_360(path, train_idx, kshot, center, num_trials=100_000):
     return final_indice
 
 
-def readColmapSceneInfo(path, images, eval, kshot=1000, seed=0, white_background=False, Depthoptim=True):
+def readColmapSceneInfo(path, images, eval, kshot=1000, seed=0, white_background=False, pc_name='points3D', Depthoptim=True):
     ## load split_idx.json
     with open(os.path.join(path, "split_index.json"), "r") as jf:
         jsonf = json.load(jf)
@@ -387,7 +386,7 @@ def readColmapSceneInfo(path, images, eval, kshot=1000, seed=0, white_background
         train_idx = sorted(np.random.choice(train_idx, size=min(kshot, len(train_idx)), replace=False)) if eval else np.arange(len(train_idx)).tolist()
 
     ### refineColmapWithIndex() remove the cameras and features except the train set
-    ply_path, cam_extrinsics, cam_intrinsics = refineColmapWithIndex(path, train_idx)
+    ply_path, cam_extrinsics, cam_intrinsics = refineColmapWithIndex(path, train_idx, pc_name)
 
     ### making pcd with the features captured from train_cam
     pcd = fetchPly(ply_path)
