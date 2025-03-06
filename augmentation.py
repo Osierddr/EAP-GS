@@ -9,7 +9,6 @@ from scene.colmap_loader import qvec2rotmat, read_extrinsics_binary, read_intrin
 from utils.graphics_utils import focal2fov
 from plyfile import PlyData, PlyElement
 from scene.gaussian_model import BasicPointCloud
-from scene.dataset_readers import fetchPly
 import argparse
 
 parser = argparse.ArgumentParser(description="Augmentation parameters")
