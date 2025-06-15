@@ -1,9 +1,10 @@
 # EAP-GS
 
 This is the official repository for the paper "EAP-GS: Efficient Augmentation of Pointcloud for 3D Gaussian Splatting in Few-shot Scene Reconstruction"
-🚀**CVPR 2025 Nashville**🚀
 
-[Project](https://osierddr.github.io/eapgs/)
+🚀**CVPR 2025 Nashville!**🚀
+
+[Project](https://osierddr.github.io/eapgs/)   |   [Paper](https://openaccess.thecvf.com/content/CVPR2025/html/Dai_EAP-GS_Efficient_Augmentation_of_Pointcloud_for_3D_Gaussian_Splatting_in_CVPR_2025_paper.html)
 
 ![EAP-GS](assets/pipeline.png)
 
@@ -125,5 +126,5 @@ Our code is built upon the foundation of following works, and we would like to t
 Consider citing as below if you find this repository helpful to your project:
 
 ```
-coming soon!
+Dai D, Xing Y. EAP-GS: Efficient Augmentation of Pointcloud for 3D Gaussian Splatting in Few-shot Scene Reconstruction[C]//Proceedings of the Computer Vision and Pattern Recognition Conference. 2025: 16498-16507.
 ```

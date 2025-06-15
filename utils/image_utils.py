@@ -13,7 +13,8 @@ import torch
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import torch.nn as nn
-
+import numpy as np
+import matplotlib
 pca_mean = None
 top_vector = None
 
@@ -137,6 +138,7 @@ def render_net_image(render_pkg, render_items, render_mode, camera):
 
 def depth_colorize_with_mask(depthlist, background=(0,0,0), dmindmax=None):
     """ depth: (H,W) - [0 ~ 1] / mask: (H,W) - [0 or 1]  -> colorized depth (H,W,3) [0 ~ 1] """
+    cmapper = matplotlib.cm.get_cmap('jet_r')
     batch, vx, vy = np.where(depthlist!=0)
     if dmindmax is None:
         valid_depth = depthlist[batch, vx, vy]
